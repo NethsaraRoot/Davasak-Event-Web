@@ -97,12 +97,15 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import reveenImg from '../assets/image/raveen.jpg'
 import uvinduImg from '../assets/image/uvindu.jpg'
+import mihiranImg from '../assets/image/mihiran.jpg'
+import diluImg from '../assets/image/images (1).jpg'
+import pamithImg from '../assets/image/images (2).jpg'
 
 const artists = [
-  { name: 'Raveen Tharuka',    role: '',       genre: 'Musician', image: reveenImg },
+  { name: 'Lakshitha Mihiran',        role: '', genre: 'Musician', image: mihiranImg},
   { name: 'Uvindu Ayshcharya', role: '',     genre: 'Musician',  image: uvinduImg },
-  { name: 'Ryan Beats',        role: '', genre: 'Musician', image: reveenImg },
-  { name: 'Zara',              role: '',   genre: 'Musician',  image: reveenImg },
+  { name: 'Pamith Mandiv',        role: '', genre: 'Musician', image: pamithImg },
+  { name: 'Dilu Beats',              role: '',   genre: 'Musician',  image: diluImg },
 ]
 
 const cardRefs    = ref([])
