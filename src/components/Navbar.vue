@@ -18,11 +18,15 @@
       <!-- <a href="#contact">CONTACT</a> -->
     </nav>
 
-    <!-- Desktop Ticket Btn -->
-    <a href="#tickets" class="ticket-btn">
-      <span class="btn-shimmer" />
-      GET TICKET
-    </a>
+    <!-- Desktop Right Side: Login + Ticket -->
+    <div class="nav-actions">
+      <button class="login-btn" @click="showLogin = true">LOGIN</button>
+
+      <a href="#tickets" class="ticket-btn">
+        <span class="btn-shimmer" />
+        GET TICKET
+      </a>
+    </div>
 
     <!-- Hamburger -->
     <button
@@ -59,11 +63,37 @@
 
         <div class="menu-deco-line" />
 
+        <button class="mobile-login-btn" @click="openLoginFromMobile">
+          <span class="link-num">→</span> LOGIN
+        </button>
+
         <a href="#tickets" class="mobile-ticket-btn" @click="closeMenu">
           <span class="btn-shimmer" />
           GET TICKET
         </a>
 
+      </div>
+    </Transition>
+
+    <!-- Login Modal (UI only) -->
+    <Transition name="login-fade">
+      <div class="login-overlay" v-if="showLogin" @click.self="showLogin = false">
+        <div class="login-card">
+          <button class="login-close" @click="showLogin = false" aria-label="Close">×</button>
+
+          <span class="login-eyebrow">Members Only</span>
+          <h2 class="login-title">Step Inside</h2>
+          <p class="login-sub">Sign in to book tickets & track your orders</p>
+
+          <button class="google-btn">
+            <span class="google-icon">G</span>
+            Continue with Google
+          </button>
+
+          <p class="login-footnote">
+            By continuing you agree to our Terms & Privacy Policy
+          </p>
+        </div>
       </div>
     </Transition>
 
@@ -75,6 +105,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const menuOpen   = ref(false)
 const isScrolled = ref(false)
+const showLogin  = ref(false)
 
 /* ── Logo click → smooth scroll to hero ── */
 function scrollToHero() {
@@ -97,13 +128,21 @@ function closeMenu() {
   document.body.style.overflow = ''
 }
 
+function openLoginFromMobile() {
+  closeMenu()
+  showLogin.value = true
+}
+
 function handleScroll() {
   isScrolled.value = window.scrollY > 40
 }
 
-/* Close menu on Escape key */
+/* Close menu/login on Escape key */
 function handleKeydown(e) {
-  if (e.key === 'Escape') closeMenu()
+  if (e.key === 'Escape') {
+    closeMenu()
+    showLogin.value = false
+  }
 }
 
 onMounted(() => {
@@ -119,7 +158,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Playfair+Display:wght@700&display=swap');
 
 /* ── Navbar ── */
 .navbar {
@@ -216,6 +255,35 @@ onUnmounted(() => {
 
 .nav-links a:hover::after {
   width: 100%;
+}
+
+/* ── Nav Actions (Login + Ticket) ── */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.login-btn {
+  font-family: 'Cinzel', serif;
+  background: transparent;
+  border: 1px solid rgba(201, 149, 42, 0.5);
+  color: #f0c84a;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.login-btn:hover {
+  background: rgba(201, 149, 42, 0.14);
+  border-color: rgba(240, 200, 74, 0.8);
+  box-shadow: 0 0 18px rgba(201, 149, 42, 0.35);
 }
 
 /* ── Ticket Button ── */
@@ -447,6 +515,31 @@ onUnmounted(() => {
   color: rgba(240, 200, 74, 0.85);
 }
 
+/* ── Mobile Login Button ── */
+.mobile-login-btn {
+  font-family: 'Cinzel', serif;
+  background: transparent;
+  border: 1px solid rgba(201, 149, 42, 0.4);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.mobile-login-btn:hover {
+  color: #f0c84a;
+  border-color: rgba(240, 200, 74, 0.8);
+  background: rgba(201, 149, 42, 0.1);
+}
+
 .mobile-ticket-btn {
   margin-top: 0.5rem;
   padding: 14px 44px;
@@ -454,7 +547,7 @@ onUnmounted(() => {
   letter-spacing: 0.26em;
 }
 
-/* ── Vue Transition ── */
+/* ── Vue Transitions ── */
 .menu-fade-enter-active {
   transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -470,10 +563,124 @@ onUnmounted(() => {
   transform: translateY(-10px);
 }
 
+.login-fade-enter-active { transition: opacity 0.25s ease; }
+.login-fade-leave-active  { transition: opacity 0.2s ease; }
+.login-fade-enter-from,
+.login-fade-leave-to      { opacity: 0; }
+
+/* ── Login Modal ── */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 4, 0.82);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  background: linear-gradient(160deg, #17130d 0%, #0d0b08 100%);
+  border: 1px solid rgba(212, 175, 90, 0.25);
+  border-radius: 6px;
+  padding: 44px 36px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(212, 175, 90, 0.05);
+  text-align: center;
+}
+
+.login-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #a8987a;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.login-close:hover { color: #f0c84a; }
+
+.login-eyebrow {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4af5a;
+  margin-bottom: 10px;
+}
+
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #f3ead9;
+  margin: 0 0 8px;
+}
+
+.login-sub {
+  font-size: 13.5px;
+  color: #a8987a;
+  margin: 0 0 26px;
+}
+
+.google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid rgba(212, 175, 90, 0.35);
+  border-radius: 50px;
+  background: transparent;
+  color: #f3ead9;
+  font-family: 'Cinzel', serif;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.google-btn:hover {
+  background: rgba(212, 175, 90, 0.1);
+  border-color: rgba(240, 200, 74, 0.7);
+  box-shadow: 0 0 18px rgba(201, 149, 42, 0.3);
+}
+
+.google-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #4285f4;
+  font-weight: 900;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.login-footnote {
+  font-size: 11px;
+  color: #5e5540;
+  margin: 20px 0 0;
+  line-height: 1.5;
+}
+
 /* ── Responsive ── */
 @media (max-width: 960px) {
   .nav-links,
-  .ticket-btn {
+  .nav-actions {
     display: none;
   }
 
@@ -501,9 +708,22 @@ onUnmounted(() => {
     padding: 0.85rem 0;
   }
 
+  .mobile-login-btn {
+    font-size: 0.78rem;
+    padding: 0.78rem 1.6rem;
+  }
+
   .mobile-ticket-btn {
     padding: 12px 32px;
     font-size: 0.76rem;
+  }
+
+  .login-card {
+    padding: 36px 26px 26px;
+  }
+
+  .login-title {
+    font-size: 24px;
   }
 }
 
