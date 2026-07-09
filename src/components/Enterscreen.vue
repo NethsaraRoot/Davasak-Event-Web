@@ -139,10 +139,9 @@ const bursting = ref(false)
 const starsRef = ref(null)
 const burstRef = ref(null)
 
-// ── Total celebration duration before moving to next screen ──
-// (approx. 1 minute — change this single value to adjust timing)
-const CELEBRATION_DURATION = 10000 // 60,000ms = 1 minute
-const REBURST_INTERVAL = 3800 // spawn a fresh burst every ~3.8s to keep it alive
+
+const CELEBRATION_DURATION = 10000 
+const REBURST_INTERVAL = 3800 
 
 let reburstTimer = null
 let finishTimer = null
