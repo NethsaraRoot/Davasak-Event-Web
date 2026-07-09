@@ -44,10 +44,7 @@
       </div>
 
       <!-- Live badge -->
-      <div class="live-badge">
-        <span class="live-dot"></span>
-        LIVE NOW
-      </div>
+      
     </div>
 
     <!-- RIGHT — Content -->
