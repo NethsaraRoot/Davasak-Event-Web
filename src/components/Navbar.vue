@@ -20,7 +20,7 @@
 
     <!-- Desktop Right Side: Login + Ticket -->
     <div class="nav-actions">
-      <button class="login-btn" @click="showLogin = true">LOGIN</button>
+      <!-- <button class="login-btn" @click="showLogin = true">LOGIN</button> -->
 
       <a href="#tickets" class="ticket-btn">
         <span class="btn-shimmer" />
