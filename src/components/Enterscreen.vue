@@ -139,6 +139,14 @@ const bursting = ref(false)
 const starsRef = ref(null)
 const burstRef = ref(null)
 
+// ── Total celebration duration before moving to next screen ──
+// (approx. 1 minute — change this single value to adjust timing)
+const CELEBRATION_DURATION = 10000 // 60,000ms = 1 minute
+const REBURST_INTERVAL = 3800 // spawn a fresh burst every ~3.8s to keep it alive
+
+let reburstTimer = null
+let finishTimer = null
+
 function spawnStars() {
   const container = starsRef.value
   if (!container) return
@@ -166,7 +174,7 @@ function spawnBurst(x, y) {
   const container = burstRef.value
   if (!container) return
 
-  // Shockwave rings — bigger, more of them
+  // Shockwave rings
   for (let r = 0; r < 5; r++) {
     const ring = document.createElement('div')
     ring.className = 'burst-ring'
@@ -175,6 +183,7 @@ function spawnBurst(x, y) {
       --delay:${r * 0.1}s;
     `
     container.appendChild(ring)
+    setTimeout(() => ring.remove(), 2200)
   }
 
   // Second wave of rings, slower and larger
@@ -186,9 +195,10 @@ function spawnBurst(x, y) {
       --delay:${0.25 + r * 0.18}s;
     `
     container.appendChild(ring)
+    setTimeout(() => ring.remove(), 2400)
   }
 
-  // Radiating light rays — doubled
+  // Radiating light rays
   const rayCount = 24
   for (let i = 0; i < rayCount; i++) {
     const ray = document.createElement('div')
@@ -200,9 +210,10 @@ function spawnBurst(x, y) {
       --delay:${Math.random() * 0.1}s;
     `
     container.appendChild(ray)
+    setTimeout(() => ray.remove(), 1200)
   }
 
-  // Golden particle sparks flying outward — much more, wider spread
+  // Golden particle sparks flying outward
   const particleCount = 220
   for (let i = 0; i < particleCount; i++) {
     const p = document.createElement('div')
@@ -220,6 +231,7 @@ function spawnBurst(x, y) {
       --delay:${Math.random() * 0.25}s;
     `
     container.appendChild(p)
+    setTimeout(() => p.remove(), 2500)
   }
 
   // Confetti pieces — fall from the top across the whole screen
@@ -241,6 +253,7 @@ function spawnBurst(x, y) {
       --delay:${Math.random() * 0.6}s;
     `
     container.appendChild(c)
+    setTimeout(() => c.remove(), 5000)
   }
 
   // Golden fireworks bursting at random points across the sky
@@ -261,8 +274,16 @@ function spawnBurst(x, y) {
         --delay:${delay}s;
       `
       container.appendChild(spark)
+      setTimeout(() => spark.remove(), 2200)
     }
   }
+}
+
+// Spawns a burst at a random point on screen (used for the repeating celebration)
+function spawnRandomBurst() {
+  const x = window.innerWidth * (0.2 + Math.random() * 0.6)
+  const y = window.innerHeight * (0.2 + Math.random() * 0.5)
+  spawnBurst(x, y)
 }
 
 function handleEnter(e) {
@@ -281,10 +302,15 @@ function handleEnter(e) {
     setTimeout(() => screenEl.classList.remove('screen-shake'), 600)
   }
 
-  setTimeout(() => {
+  // Keep the celebration alive with fresh bursts every few seconds
+  reburstTimer = setInterval(spawnRandomBurst, REBURST_INTERVAL)
+
+  // After the full celebration duration, move on to the next screen
+  finishTimer = setTimeout(() => {
+    clearInterval(reburstTimer)
     visible.value = false
     emit('entered')
-  }, 4500)
+  }, CELEBRATION_DURATION)
 }
 
 function onKeydown(e) {
@@ -297,6 +323,8 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
+  if (reburstTimer) clearInterval(reburstTimer)
+  if (finishTimer) clearTimeout(finishTimer)
 })
 </script>
 
@@ -373,14 +401,14 @@ onBeforeUnmount(() => {
   z-index: 60; pointer-events: none;
   display: flex; flex-direction: column; align-items: center; gap: 14px;
   width: 90%;
-  animation: titlePop 4.5s ease-out forwards;
+  animation: titlePop 60s ease-out forwards;
   opacity: 0;
 }
 @keyframes titlePop {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-  8%   { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
-  14%  { transform: translate(-50%, -50%) scale(1); }
-  88%  { opacity: 1; }
+  3%   { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  6%   { transform: translate(-50%, -50%) scale(1); }
+  92%  { opacity: 1; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(1.04); }
 }
 .grand-title-line1 {
