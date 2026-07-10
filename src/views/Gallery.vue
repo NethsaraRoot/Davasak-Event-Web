@@ -1,6 +1,5 @@
 <template>
   <section class="gallery section" id="gallery">
-
     <div class="top">
       <div class="top-badge">GALLERY</div>
       <h2>Concert Moments</h2>
@@ -8,20 +7,25 @@
     </div>
 
     <div class="gallery-grid">
-
       <div
         class="gal-item"
         v-for="(photo, index) in photos"
         :key="index"
         @click="openLightbox(index)"
       >
-        <img :src="photo.src" :alt="photo.tag">
+        <img :src="photo.src" :alt="photo.tag" />
         <div class="zoom-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            <line x1="11" y1="8" x2="11" y2="14"/>
-            <line x1="8" y1="11" x2="14" y2="11"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#000"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <line x1="11" y1="8" x2="11" y2="14" />
+            <line x1="8" y1="11" x2="14" y2="11" />
           </svg>
         </div>
         <div class="gal-overlay">
@@ -29,86 +33,97 @@
           <p>{{ photo.caption }}</p>
         </div>
       </div>
-
     </div>
 
     <div class="gal-footer">
-      <div class="gal-count">Showing <span>{{ photos.length }}</span> of <span>24</span> photos</div>
+      <div class="gal-count">
+        Showing <span>{{ photos.length }}</span> of <span>24</span> photos
+      </div>
       <button class="btn-ghost">View All Photos ›</button>
     </div>
 
     <!-- Lightbox -->
     <Teleport to="body">
-      <div class="lightbox" v-if="lightboxIndex !== null" @click="closeLightbox">
+      <div
+        class="lightbox"
+        v-if="lightboxIndex !== null"
+        @click="closeLightbox"
+      >
         <div class="lightbox-inner" @click.stop>
-
           <button class="lb-close" @click="closeLightbox">✕</button>
           <button class="lb-prev" @click="prevPhoto">‹</button>
           <button class="lb-next" @click="nextPhoto">›</button>
 
-          <img :src="photos[lightboxIndex].src" :alt="photos[lightboxIndex].tag">
+          <img
+            :src="photos[lightboxIndex].src"
+            :alt="photos[lightboxIndex].tag"
+          />
 
           <div class="lb-info">
             <div class="gal-tag">{{ photos[lightboxIndex].tag }}</div>
             <p>{{ photos[lightboxIndex].caption }}</p>
           </div>
-
         </div>
       </div>
     </Teleport>
-
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
+
+import galleryImg1 from "../assets/gallery/gallery1.jpeg";
+import galleryImg2 from "../assets/gallery/gallery2.jpeg";
+import galleryImg3 from "../assets/gallery/gallery3.jpeg";
+import galleryImg4 from "../assets/gallery/gallery4.jpeg";
 
 const photos = [
   {
-    src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1974&auto=format&fit=crop',
-    tag: 'Main Stage',
-    caption: 'Opening night performance'
+    src: galleryImg1,
+    tag: "Main Stage",
+    caption: "Opening night performance",
   },
   {
-    src: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1974&auto=format&fit=crop',
-    tag: 'Live Set',
-    caption: 'Crowd energy at its peak'
+    src: galleryImg2,
+    tag: "Live Set",
+    caption: "Crowd energy at its peak",
   },
   {
-    src: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1974&auto=format&fit=crop',
-    tag: 'Backstage',
-    caption: 'Behind the scenes magic'
+    src: galleryImg3,
+    tag: "Backstage",
+    caption: "Behind the scenes magic",
   },
   {
-    src: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1974&auto=format&fit=crop',
-    tag: 'Crowd',
-    caption: 'Thousands united by music'
-  }
-]
+    src: galleryImg4,
+    tag: "Crowd",
+    caption: "Thousands united by music",
+  },
+];
 
-const lightboxIndex = ref(null)
+const lightboxIndex = ref(null);
 
 function openLightbox(index) {
-  lightboxIndex.value = index
-  document.body.style.overflow = 'hidden'
+  lightboxIndex.value = index;
+  document.body.style.overflow = "hidden";
 }
 
 function closeLightbox() {
-  lightboxIndex.value = null
-  document.body.style.overflow = ''
+  lightboxIndex.value = null;
+  document.body.style.overflow = "";
 }
 
 function prevPhoto() {
-  lightboxIndex.value = (lightboxIndex.value - 1 + photos.length) % photos.length
+  lightboxIndex.value =
+    (lightboxIndex.value - 1 + photos.length) % photos.length;
 }
 
 function nextPhoto() {
-  lightboxIndex.value = (lightboxIndex.value + 1) % photos.length
+  lightboxIndex.value = (lightboxIndex.value + 1) % photos.length;
 }
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap");
 
 .section {
   padding: 120px 8%;
@@ -117,7 +132,7 @@ function nextPhoto() {
 .gallery {
   background: #0a0a0a;
   color: white;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .top {
@@ -139,10 +154,16 @@ function nextPhoto() {
 }
 
 .top h2 {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: "Bebas Neue", sans-serif;
   font-size: 64px;
   letter-spacing: 2px;
-  background: linear-gradient(135deg, #f5d376 0%, #c9a84c 40%, #a67c2e 70%, #f5d376 100%);
+  background: linear-gradient(
+    135deg,
+    #f5d376 0%,
+    #c9a84c 40%,
+    #a67c2e 70%,
+    #f5d376 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -184,7 +205,7 @@ function nextPhoto() {
 }
 
 .gal-item::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, #c9a84c22 0%, transparent 60%);
@@ -194,13 +215,17 @@ function nextPhoto() {
   pointer-events: none;
 }
 
-.gal-item:hover::before { opacity: 1; }
+.gal-item:hover::before {
+  opacity: 1;
+}
 
 .gal-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), filter 0.4s ease;
+  transition:
+    transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    filter 0.4s ease;
   display: block;
 }
 
@@ -212,21 +237,26 @@ function nextPhoto() {
 /* Zoom icon */
 .zoom-icon {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%) scale(0.6);
-  width: 52px; height: 52px;
+  width: 52px;
+  height: 52px;
   background: linear-gradient(135deg, #f5d376, #c9a84c);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.23,1,0.32,1);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 3;
 }
 
 .zoom-icon svg {
-  width: 20px; height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .gal-item:hover .zoom-icon {
@@ -237,7 +267,9 @@ function nextPhoto() {
 /* Slide-up overlay */
 .gal-overlay {
   position: absolute;
-  bottom: 0; left: 0; right: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: linear-gradient(to top, #000000ee 0%, transparent 100%);
   padding: 28px 20px 18px;
   z-index: 2;
@@ -284,7 +316,9 @@ function nextPhoto() {
   letter-spacing: 2px;
 }
 
-.gal-count span { color: #c9a84c; }
+.gal-count span {
+  color: #c9a84c;
+}
 
 .btn-ghost {
   display: inline-flex;
@@ -300,7 +334,9 @@ function nextPhoto() {
   background: #c9a84c0d;
   cursor: pointer;
   text-transform: uppercase;
-  transition: background 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
 }
 
 .btn-ghost:hover {
@@ -312,7 +348,7 @@ function nextPhoto() {
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.95);
+  background: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,20 +358,30 @@ function nextPhoto() {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .lightbox-inner {
   position: relative;
   max-width: 900px;
   width: 90%;
-  animation: slideUp 0.3s cubic-bezier(0.23,1,0.32,1);
+  animation: slideUp 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .lightbox-inner img {
@@ -362,8 +408,10 @@ function nextPhoto() {
 
 .lb-close {
   position: absolute;
-  top: -44px; right: 0;
-  width: 36px; height: 36px;
+  top: -44px;
+  right: 0;
+  width: 36px;
+  height: 36px;
   background: #1e1e1e;
   border: 1px solid #333;
   border-radius: 50%;
@@ -373,17 +421,23 @@ function nextPhoto() {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
-.lb-close:hover { background: #c9a84c; color: #000; }
+.lb-close:hover {
+  background: #c9a84c;
+  color: #000;
+}
 
 .lb-prev,
 .lb-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 44px; height: 44px;
+  width: 44px;
+  height: 44px;
   background: #1e1e1e;
   border: 1px solid #333;
   border-radius: 50%;
@@ -393,12 +447,18 @@ function nextPhoto() {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   z-index: 10;
 }
 
-.lb-prev { left: -60px; }
-.lb-next { right: -60px; }
+.lb-prev {
+  left: -60px;
+}
+.lb-next {
+  right: -60px;
+}
 
 .lb-prev:hover,
 .lb-next:hover {
@@ -412,10 +472,20 @@ function nextPhoto() {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
-  .gal-item:first-child { grid-row: span 1; }
-  .gal-item { height: 280px; }
-  .lb-prev { left: -10px; }
-  .lb-next { right: -10px; }
-  .top h2 { font-size: 42px; }
+  .gal-item:first-child {
+    grid-row: span 1;
+  }
+  .gal-item {
+    height: 280px;
+  }
+  .lb-prev {
+    left: -10px;
+  }
+  .lb-next {
+    right: -10px;
+  }
+  .top h2 {
+    font-size: 42px;
+  }
 }
 </style>
