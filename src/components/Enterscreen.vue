@@ -8,16 +8,6 @@
       <div class="bg-radial"></div>
       <div class="stars" ref="starsRef"></div>
 
-      <!-- Burst effect container (grand opening reveal) -->
-      <div class="burst-layer" ref="burstRef" aria-hidden="true"></div>
-      <div v-if="bursting" class="flash-overlay"></div>
-      <div v-if="bursting" class="flash-overlay flash-overlay--second"></div>
-      <div v-if="bursting" class="grand-title" aria-hidden="true">
-        <span class="grand-title-line1">✦ GRAND OPENING ✦</span>
-        <span class="grand-title-line2">SLTC</span>
-        <span class="grand-title-line3">DAWASAK FILM IN CONCERT</span>
-      </div>
-
       <div class="rune-h rune-h--top">
         <div class="rune-h-line"></div>
         <span class="rune-h-symbol">✦ DAWASAK ✦</span>
@@ -135,16 +125,7 @@ const emit = defineEmits(['entered'])
 
 const visible  = ref(true)
 const leaving  = ref(false)
-const bursting = ref(false)
 const starsRef = ref(null)
-const burstRef = ref(null)
-
-
-const CELEBRATION_DURATION = 10000 
-const REBURST_INTERVAL = 3800 
-
-let reburstTimer = null
-let finishTimer = null
 
 function spawnStars() {
   const container = starsRef.value
@@ -165,151 +146,12 @@ function spawnStars() {
   }
 }
 
-// ── Grand opening burst effect ──
-// Big multi-layer explosion: shockwaves, light rays, sparks, confetti, screen shake.
-const confettiColors = ['#f5d97a', '#fffbe6', '#c9a227', '#e8c15e', '#ffffff', '#8b6914']
-
-function spawnBurst(x, y) {
-  const container = burstRef.value
-  if (!container) return
-
-  // Shockwave rings
-  for (let r = 0; r < 5; r++) {
-    const ring = document.createElement('div')
-    ring.className = 'burst-ring'
-    ring.style.cssText = `
-      left:${x}px; top:${y}px;
-      --delay:${r * 0.1}s;
-    `
-    container.appendChild(ring)
-    setTimeout(() => ring.remove(), 2200)
-  }
-
-  // Second wave of rings, slower and larger
-  for (let r = 0; r < 3; r++) {
-    const ring = document.createElement('div')
-    ring.className = 'burst-ring burst-ring--slow'
-    ring.style.cssText = `
-      left:${x}px; top:${y}px;
-      --delay:${0.25 + r * 0.18}s;
-    `
-    container.appendChild(ring)
-    setTimeout(() => ring.remove(), 2400)
-  }
-
-  // Radiating light rays
-  const rayCount = 24
-  for (let i = 0; i < rayCount; i++) {
-    const ray = document.createElement('div')
-    ray.className = 'burst-ray'
-    const angle = (360 / rayCount) * i
-    ray.style.cssText = `
-      left:${x}px; top:${y}px;
-      --angle:${angle}deg;
-      --delay:${Math.random() * 0.1}s;
-    `
-    container.appendChild(ray)
-    setTimeout(() => ray.remove(), 1200)
-  }
-
-  // Golden particle sparks flying outward
-  const particleCount = 220
-  for (let i = 0; i < particleCount; i++) {
-    const p = document.createElement('div')
-    p.className = 'burst-particle'
-    const angle = Math.random() * Math.PI * 2
-    const dist = 150 + Math.random() * 520
-    const dx = Math.cos(angle) * dist
-    const dy = Math.sin(angle) * dist
-    const size = Math.random() * 5 + 2
-    p.style.cssText = `
-      left:${x}px; top:${y}px;
-      width:${size}px; height:${size}px;
-      --dx:${dx}px; --dy:${dy}px;
-      --dur:${0.9 + Math.random() * 0.9}s;
-      --delay:${Math.random() * 0.25}s;
-    `
-    container.appendChild(p)
-    setTimeout(() => p.remove(), 2500)
-  }
-
-  // Confetti pieces — fall from the top across the whole screen
-  const confettiCount = 90
-  for (let i = 0; i < confettiCount; i++) {
-    const c = document.createElement('div')
-    c.className = 'confetti-piece'
-    const left = Math.random() * 100
-    const color = confettiColors[Math.floor(Math.random() * confettiColors.length)]
-    const size = 6 + Math.random() * 8
-    const rotate = Math.random() * 360
-    c.style.cssText = `
-      left:${left}%;
-      background:${color};
-      width:${size}px; height:${size * (Math.random() > 0.5 ? 1.6 : 1)}px;
-      --rot:${rotate}deg;
-      --sway:${(Math.random() - 0.5) * 160}px;
-      --dur:${2.2 + Math.random() * 1.8}s;
-      --delay:${Math.random() * 0.6}s;
-    `
-    container.appendChild(c)
-    setTimeout(() => c.remove(), 5000)
-  }
-
-  // Golden fireworks bursting at random points across the sky
-  const fireworkCount = 6
-  for (let i = 0; i < fireworkCount; i++) {
-    const fx = 15 + Math.random() * 70
-    const fy = 10 + Math.random() * 45
-    const delay = 0.15 + Math.random() * 0.9
-    for (let s = 0; s < 26; s++) {
-      const spark = document.createElement('div')
-      spark.className = 'firework-spark'
-      const angle = (360 / 26) * s + Math.random() * 10
-      const rad = (angle * Math.PI) / 180
-      const dist = 60 + Math.random() * 60
-      spark.style.cssText = `
-        left:${fx}%; top:${fy}%;
-        --dx:${Math.cos(rad) * dist}px; --dy:${Math.sin(rad) * dist}px;
-        --delay:${delay}s;
-      `
-      container.appendChild(spark)
-      setTimeout(() => spark.remove(), 2200)
-    }
-  }
-}
-
-// Spawns a burst at a random point on screen (used for the repeating celebration)
-function spawnRandomBurst() {
-  const x = window.innerWidth * (0.2 + Math.random() * 0.6)
-  const y = window.innerHeight * (0.2 + Math.random() * 0.5)
-  spawnBurst(x, y)
-}
-
-function handleEnter(e) {
-  if (leaving.value) return
+function handleEnter() {
   leaving.value = true
-  bursting.value = true
-
-  const x = e?.clientX ?? window.innerWidth / 2
-  const y = e?.clientY ?? window.innerHeight / 2
-  spawnBurst(x, y)
-
-  // Screen shake for extra impact
-  const screenEl = document.querySelector('.enter-screen')
-  if (screenEl) {
-    screenEl.classList.add('screen-shake')
-    setTimeout(() => screenEl.classList.remove('screen-shake'), 600)
-  }
-
-  // Keep the celebration alive with fresh bursts every few seconds
-  reburstTimer = setInterval(spawnRandomBurst, REBURST_INTERVAL)
-
-  // After the full celebration duration, move on to the next screen
-  finishTimer = setTimeout(() => {
-    clearInterval(reburstTimer)
+  setTimeout(() => {
     visible.value = false
     emit('entered')
-  }, CELEBRATION_DURATION)
+  }, 700)
 }
 
 function onKeydown(e) {
@@ -322,8 +164,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
-  if (reburstTimer) clearInterval(reburstTimer)
-  if (finishTimer) clearTimeout(finishTimer)
 })
 </script>
 
@@ -371,165 +211,6 @@ onBeforeUnmount(() => {
 @keyframes twinkle {
   from { opacity: 0;   transform: scale(.5); }
   to   { opacity: var(--op); transform: scale(1); }
-}
-
-/* ── Grand opening burst ── */
-.burst-layer {
-  position: absolute; inset: 0; pointer-events: none; z-index: 50;
-  overflow: hidden;
-}
-
-.flash-overlay {
-  position: absolute; inset: 0; z-index: 40; pointer-events: none;
-  background: radial-gradient(circle, rgba(255,251,230,.9) 0%, rgba(197,157,39,.4) 35%, transparent 72%);
-  animation: flashPulse 1.1s ease-out forwards;
-}
-.flash-overlay--second {
-  animation-delay: .35s;
-  animation-duration: 1.4s;
-  background: radial-gradient(circle, rgba(255,255,255,.6) 0%, rgba(245,217,122,.25) 40%, transparent 75%);
-}
-@keyframes flashPulse {
-  0%   { opacity: 0; }
-  12%  { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.grand-title {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  z-index: 60; pointer-events: none;
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
-  width: 90%;
-  animation: titlePop 60s ease-out forwards;
-  opacity: 0;
-}
-@keyframes titlePop {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-  3%   { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
-  6%   { transform: translate(-50%, -50%) scale(1); }
-  92%  { opacity: 1; }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.04); }
-}
-.grand-title-line1 {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(.85rem, 2vw, 1.2rem);
-  font-weight: 600; letter-spacing: .5em; text-transform: uppercase;
-  color: rgba(245,217,122,.9);
-  text-shadow: 0 0 14px rgba(197,157,39,.7);
-}
-.grand-title-line2 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(3rem, 11vw, 7rem);
-  font-weight: 900; letter-spacing: .18em; text-transform: uppercase;
-  background: linear-gradient(135deg, #fffbe6 0%, #f5d97a 25%, #c9a227 55%, #f5d97a 80%, #fffbe6 100%);
-  background-size: 220% auto;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  animation: shimmerText 4s linear infinite;
-  filter: drop-shadow(0 0 30px rgba(197,157,39,.7));
-  line-height: 1.1;
-}
-.grand-title-line3 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.1rem, 3.6vw, 2.2rem);
-  font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  color: #fffbe6;
-  text-shadow: 0 0 18px rgba(197,157,39,.9), 0 0 42px rgba(197,157,39,.6);
-  text-align: center;
-}
-
-.screen-shake { animation: shakeIt .55s ease-in-out; }
-@keyframes shakeIt {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-6px, 4px); }
-  20% { transform: translate(6px, -4px); }
-  30% { transform: translate(-8px, -2px); }
-  40% { transform: translate(8px, 3px); }
-  50% { transform: translate(-5px, 3px); }
-  60% { transform: translate(5px, -3px); }
-  70% { transform: translate(-4px, 2px); }
-  80% { transform: translate(4px, -2px); }
-  90% { transform: translate(-2px, 1px); }
-}
-
-:deep(.burst-ring) {
-  position: absolute;
-  width: 10px; height: 10px;
-  margin-left: -5px; margin-top: -5px;
-  border-radius: 50%;
-  border: 2px solid rgba(245, 217, 122, .9);
-  box-shadow: 0 0 18px rgba(197,157,39,.8);
-  animation: ringExpand 1.1s var(--delay) ease-out forwards;
-  opacity: 0;
-}
-:deep(.burst-ring--slow) {
-  border-color: rgba(255, 251, 230, .7);
-  animation-name: ringExpandSlow;
-  animation-duration: 1.6s;
-}
-@keyframes ringExpand {
-  0%   { width: 10px; height: 10px; margin-left: -5px; margin-top: -5px; opacity: 1; border-width: 3px; }
-  100% { width: 720px; height: 720px; margin-left: -360px; margin-top: -360px; opacity: 0; border-width: .5px; }
-}
-@keyframes ringExpandSlow {
-  0%   { width: 10px; height: 10px; margin-left: -5px; margin-top: -5px; opacity: .9; border-width: 4px; }
-  100% { width: 1100px; height: 1100px; margin-left: -550px; margin-top: -550px; opacity: 0; border-width: .5px; }
-}
-
-:deep(.burst-ray) {
-  position: absolute;
-  width: 4px; height: 0;
-  background: linear-gradient(to top, rgba(245,217,122,0) 0%, rgba(255,251,230,.95) 60%, rgba(197,157,39,.9) 100%);
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%) rotate(var(--angle));
-  animation: rayShoot .7s var(--delay) ease-out forwards;
-  opacity: 0;
-}
-@keyframes rayShoot {
-  0%   { height: 0;   opacity: 1; }
-  70%  { height: 340px; opacity: 1; }
-  100% { height: 400px; opacity: 0; }
-}
-
-:deep(.burst-particle) {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fffbe6 0%, #f5d97a 55%, #c9a227 100%);
-  box-shadow: 0 0 8px rgba(197,157,39,.9);
-  margin-left: -2px; margin-top: -2px;
-  animation: particleFly var(--dur) var(--delay) cubic-bezier(.2,.7,.3,1) forwards;
-  opacity: 0;
-}
-@keyframes particleFly {
-  0%   { transform: translate(0, 0) scale(1);   opacity: 1; }
-  100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; }
-}
-
-:deep(.confetti-piece) {
-  position: absolute;
-  top: -20px;
-  border-radius: 1px;
-  animation: confettiFall var(--dur) var(--delay) ease-in forwards;
-  opacity: 0;
-}
-@keyframes confettiFall {
-  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
-  100% { opacity: .9; transform: translate(var(--sway), 780px) rotate(var(--rot)); }
-}
-
-:deep(.firework-spark) {
-  position: absolute;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fffbe6 0%, #f5d97a 60%, #c9a227 100%);
-  box-shadow: 0 0 10px rgba(245,217,122,.9);
-  margin-left: -2px; margin-top: -2px;
-  animation: sparkBurst 1s var(--delay) ease-out forwards;
-  opacity: 0;
-}
-@keyframes sparkBurst {
-  0%   { transform: translate(0, 0) scale(1);   opacity: 1; }
-  70%  { opacity: 1; }
-  100% { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; }
 }
 
 .rune-h {
