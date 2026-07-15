@@ -387,15 +387,20 @@
       </div>
 
       <!-- CTA -->
-      <!-- <div class="hero__cta-wrap" ref="el3">
+      <div class="hero__cta-wrap" ref="el3">
         <button class="hero__cta">
           <span class="cta-shimmer" />
           GET TICKETS
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M5 12h14M13 6l6 6-6 6"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
         </button>
-      </div> -->
+      </div>
     </div>
 
     <!-- Mobile Bottom CTA -->

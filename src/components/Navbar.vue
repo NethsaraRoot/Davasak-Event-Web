@@ -1,6 +1,5 @@
 <template>
   <header class="navbar" :class="{ scrolled: isScrolled }">
-
     <!-- Logo → clicks scroll to #home -->
     <div class="logo-wrap">
       <a @click="scrollToHero" class="logo-link">
@@ -43,7 +42,6 @@
     <!-- Mobile Overlay Menu -->
     <Transition name="menu-fade">
       <div class="mobile-menu" v-if="menuOpen">
-
         <button class="menu-close" @click="closeMenu" aria-label="Close menu">
           <span /><span />
         </button>
@@ -53,11 +51,21 @@
         <img src="../assets/logo.png" alt="logo" class="menu-logo" />
 
         <nav class="menu-links">
-          <a href="#home"    @click="closeMenu"><span class="link-num">01</span>HOME</a>
-          <a href="#story"   @click="closeMenu"><span class="link-num">02</span>THE STORY</a>
-          <a href="#artists" @click="closeMenu"><span class="link-num">03</span>ARTISTS</a>
-          <a href="#band"    @click="closeMenu"><span class="link-num">04</span>BAND</a>
-          <a href="#gallery" @click="closeMenu"><span class="link-num">05</span>GALLERY</a>
+          <a href="#home" @click="closeMenu"
+            ><span class="link-num">01</span>HOME</a
+          >
+          <a href="#story" @click="closeMenu"
+            ><span class="link-num">02</span>THE STORY</a
+          >
+          <a href="#artists" @click="closeMenu"
+            ><span class="link-num">03</span>ARTISTS</a
+          >
+          <a href="#band" @click="closeMenu"
+            ><span class="link-num">04</span>BAND</a
+          >
+          <a href="#gallery" @click="closeMenu"
+            ><span class="link-num">05</span>GALLERY</a
+          >
           <!-- <a href="#contact" @click="closeMenu"><span class="link-num">06</span>CONTACT</a> -->
         </nav>
 
@@ -67,19 +75,28 @@
           <span class="link-num">→</span> LOGIN
         </button>
 
-        <a href="#tickets" class="mobile-ticket-btn" @click="closeMenu">
+        <a href="/upload-slip" class="mobile-ticket-btn" @click="closeMenu">
           <span class="btn-shimmer" />
           GET TICKET
         </a>
-
       </div>
     </Transition>
 
     <!-- Login Modal (UI only) -->
     <Transition name="login-fade">
-      <div class="login-overlay" v-if="showLogin" @click.self="showLogin = false">
+      <div
+        class="login-overlay"
+        v-if="showLogin"
+        @click.self="showLogin = false"
+      >
         <div class="login-card">
-          <button class="login-close" @click="showLogin = false" aria-label="Close">×</button>
+          <button
+            class="login-close"
+            @click="showLogin = false"
+            aria-label="Close"
+          >
+            ×
+          </button>
 
           <span class="login-eyebrow">Members Only</span>
           <h2 class="login-title">Step Inside</h2>
@@ -96,74 +113,74 @@
         </div>
       </div>
     </Transition>
-
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from "vue";
 
-const menuOpen   = ref(false)
-const isScrolled = ref(false)
-const showLogin  = ref(false)
+const menuOpen = ref(false);
+const isScrolled = ref(false);
+const showLogin = ref(false);
 
 /* ── Logo click → smooth scroll to hero ── */
 function scrollToHero() {
-  closeMenu()
-  const hero = document.getElementById('home')
+  closeMenu();
+  const hero = document.getElementById("home");
   if (hero) {
-    hero.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    hero.scrollIntoView({ behavior: "smooth", block: "start" });
   } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
 function toggleMenu() {
-  menuOpen.value = !menuOpen.value
-  document.body.style.overflow = menuOpen.value ? 'hidden' : ''
+  menuOpen.value = !menuOpen.value;
+  document.body.style.overflow = menuOpen.value ? "hidden" : "";
 }
 
 function closeMenu() {
-  menuOpen.value = false
-  document.body.style.overflow = ''
+  menuOpen.value = false;
+  document.body.style.overflow = "";
 }
 
 function openLoginFromMobile() {
-  closeMenu()
-  showLogin.value = true
+  closeMenu();
+  showLogin.value = true;
 }
 
 function handleScroll() {
-  isScrolled.value = window.scrollY > 40
+  isScrolled.value = window.scrollY > 40;
 }
 
 /* Close menu/login on Escape key */
 function handleKeydown(e) {
-  if (e.key === 'Escape') {
-    closeMenu()
-    showLogin.value = false
+  if (e.key === "Escape") {
+    closeMenu();
+    showLogin.value = false;
   }
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-  window.addEventListener('keydown', handleKeydown)
-})
+  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("keydown", handleKeydown);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('keydown', handleKeydown)
-  document.body.style.overflow = ''
-})
+  window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener("keydown", handleKeydown);
+  document.body.style.overflow = "";
+});
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Playfair+Display:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Playfair+Display:wght@700&display=swap");
 
 /* ── Navbar ── */
 .navbar {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   z-index: 999;
   display: flex;
@@ -173,10 +190,10 @@ onUnmounted(() => {
   background: transparent;
   border-bottom: 1px solid transparent;
   transition:
-    background      0.45s ease,
-    border-color    0.45s ease,
+    background 0.45s ease,
+    border-color 0.45s ease,
     backdrop-filter 0.45s ease,
-    padding         0.35s ease;
+    padding 0.35s ease;
   box-sizing: border-box;
 }
 
@@ -207,7 +224,9 @@ onUnmounted(() => {
   width: auto;
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(201, 149, 42, 0.4));
-  transition: filter 0.3s ease, transform 0.3s ease;
+  transition:
+    filter 0.3s ease,
+    transform 0.3s ease;
   display: block;
 }
 
@@ -224,7 +243,7 @@ onUnmounted(() => {
 }
 
 .nav-links a {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
   font-size: 12.5px;
@@ -236,7 +255,7 @@ onUnmounted(() => {
 }
 
 .nav-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -266,7 +285,7 @@ onUnmounted(() => {
 }
 
 .login-btn {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   background: transparent;
   border: 1px solid rgba(201, 149, 42, 0.5);
   color: #f0c84a;
@@ -289,7 +308,7 @@ onUnmounted(() => {
 /* ── Ticket Button ── */
 .ticket-btn,
 .mobile-ticket-btn {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   padding: 12px 28px;
   border-radius: 50px;
   text-decoration: none;
@@ -315,14 +334,20 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.3s ease;
   display: inline-flex;
   align-items: center;
 }
 
 @keyframes btnShim {
-  0%   { background-position: 0% center; }
-  100% { background-position: 220% center; }
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 220% center;
+  }
 }
 
 .btn-shimmer {
@@ -339,8 +364,12 @@ onUnmounted(() => {
 }
 
 @keyframes sweep {
-  0%   { background-position: -100% center; }
-  100% { background-position: 250% center; }
+  0% {
+    background-position: -100% center;
+  }
+  100% {
+    background-position: 250% center;
+  }
 }
 
 .ticket-btn:hover,
@@ -379,9 +408,15 @@ onUnmounted(() => {
   transform-origin: center;
 }
 
-.hamburger span:nth-child(1) { width: 26px; }
-.hamburger span:nth-child(2) { width: 19px; }
-.hamburger span:nth-child(3) { width: 26px; }
+.hamburger span:nth-child(1) {
+  width: 26px;
+}
+.hamburger span:nth-child(2) {
+  width: 19px;
+}
+.hamburger span:nth-child(3) {
+  width: 26px;
+}
 
 .hamburger.open span:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
@@ -427,7 +462,10 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    transform 0.3s;
 }
 
 .menu-close:hover {
@@ -444,8 +482,12 @@ onUnmounted(() => {
   border-radius: 2px;
 }
 
-.menu-close span:first-child { transform: rotate(45deg); }
-.menu-close span:last-child  { transform: rotate(-45deg); }
+.menu-close span:first-child {
+  transform: rotate(45deg);
+}
+.menu-close span:last-child {
+  transform: rotate(-45deg);
+}
 
 .menu-logo {
   height: 54px;
@@ -458,7 +500,12 @@ onUnmounted(() => {
 .menu-deco-line {
   width: 130px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201,149,42,0.7), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 149, 42, 0.7),
+    transparent
+  );
   margin: 0.5rem 0 1.2rem;
 }
 
@@ -472,7 +519,7 @@ onUnmounted(() => {
 }
 
 .menu-links a {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
   font-size: 0.98rem;
@@ -487,9 +534,9 @@ onUnmounted(() => {
   gap: 1rem;
   border-bottom: 1px solid rgba(201, 149, 42, 0.1);
   transition:
-    color          0.3s ease,
+    color 0.3s ease,
     letter-spacing 0.3s ease,
-    text-shadow    0.3s ease;
+    text-shadow 0.3s ease;
 }
 
 .menu-links a:first-child {
@@ -517,7 +564,7 @@ onUnmounted(() => {
 
 /* ── Mobile Login Button ── */
 .mobile-login-btn {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   background: transparent;
   border: 1px solid rgba(201, 149, 42, 0.4);
   color: rgba(255, 255, 255, 0.85);
@@ -549,10 +596,14 @@ onUnmounted(() => {
 
 /* ── Vue Transitions ── */
 .menu-fade-enter-active {
-  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .menu-fade-leave-active {
-  transition: opacity 0.28s ease, transform 0.28s ease;
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease;
 }
 .menu-fade-enter-from {
   opacity: 0;
@@ -563,10 +614,16 @@ onUnmounted(() => {
   transform: translateY(-10px);
 }
 
-.login-fade-enter-active { transition: opacity 0.25s ease; }
-.login-fade-leave-active  { transition: opacity 0.2s ease; }
+.login-fade-enter-active {
+  transition: opacity 0.25s ease;
+}
+.login-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
 .login-fade-enter-from,
-.login-fade-leave-to      { opacity: 0; }
+.login-fade-leave-to {
+  opacity: 0;
+}
 
 /* ── Login Modal ── */
 .login-overlay {
@@ -590,7 +647,9 @@ onUnmounted(() => {
   border: 1px solid rgba(212, 175, 90, 0.25);
   border-radius: 6px;
   padding: 44px 36px 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(212, 175, 90, 0.05);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(212, 175, 90, 0.05);
   text-align: center;
 }
 
@@ -606,11 +665,13 @@ onUnmounted(() => {
   cursor: pointer;
   transition: color 0.2s ease;
 }
-.login-close:hover { color: #f0c84a; }
+.login-close:hover {
+  color: #f0c84a;
+}
 
 .login-eyebrow {
   display: inline-block;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -619,7 +680,7 @@ onUnmounted(() => {
 }
 
 .login-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 28px;
   font-weight: 700;
   color: #f3ead9;
@@ -643,7 +704,7 @@ onUnmounted(() => {
   border-radius: 50px;
   background: transparent;
   color: #f3ead9;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 12.5px;
   letter-spacing: 0.08em;
   cursor: pointer;
