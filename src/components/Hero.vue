@@ -341,8 +341,8 @@
             </svg>
           </div>
           <div class="si-text">
-            <span class="si-lbl">COMING SOON</span>
-            <span class="si-sub">STAY TUNED</span>
+            <span class="si-lbl">AUGUST 06</span>
+            <span class="si-sub">DATE</span>
           </div>
         </div>
         <div class="sdiv" />
@@ -362,7 +362,7 @@
           </div>
           <div class="si-text">
             <span class="si-lbl">SLTC AMPHITHEATRE</span>
-            <span class="si-sub">SRI LANKA</span>
+            <span class="si-sub">VENUE</span>
           </div>
         </div>
         <div class="sdiv" />
@@ -374,14 +374,13 @@
               stroke="currentColor"
               stroke-width="1.5"
             >
-              <path d="M9 18V5l12-2v13" />
-              <circle cx="6" cy="18" r="3" />
-              <circle cx="18" cy="16" r="3" />
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3.5 2" />
             </svg>
           </div>
           <div class="si-text">
-            <span class="si-lbl">MIUSIC</span>
-            <span class="si-sub">THE SOUL OF MUSIC</span>
+            <span class="si-lbl">6.00 PM</span>
+            <span class="si-sub">TIME</span>
           </div>
         </div>
       </div>
@@ -400,7 +399,7 @@
 
     <!-- Mobile Bottom CTA -->
     <div class="mobile-cta">
-      <button class="mobile-cta-btn">GET TICKETS</button>
+      <router-link to="/tickets" class="mobile-cta-btn">GET TICKETS <br /> 500 SEATS ONLY</router-link>
     </div>
   </section>
 </template>
@@ -1183,6 +1182,11 @@ onMounted(() => {
     0 8px 25px rgba(0, 0, 0, 0.45);
 
   transition: 0.3s ease;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .mobile-cta-btn:hover {

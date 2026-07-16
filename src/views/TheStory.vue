@@ -45,7 +45,7 @@
         <div class="frame-corner fc-bl"></div>
         <div class="frame-corner fc-br"></div>
         <img
-          src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1974&auto=format&fit=crop"
+          :src="storyImage"
           alt="Concert night"
           class="story-img"
         />
@@ -107,10 +107,13 @@
 </template>
 
 <script>
+import storyImage from '../assets/image/story.jpeg'
+
 export default {
   name: "StorySection",
   data() {
     return {
+      storyImage,
       notes: [
         { char: "♪", x: "8%", d: "7s", s: "1.4rem", delay: "0s" },
         { char: "♫", x: "18%", d: "9s", s: "2rem", delay: "1.2s" },
