@@ -54,14 +54,14 @@
         <div class="stub-block">
           <span class="block-label">02 — Transfer payment</span>
           <ul class="bank-list">
-            <li><span>Bank</span><strong>BOC</strong></li>
+            <li><span>Bank</span><strong>***********</strong></li>
             <li>
-              <span>Account name</span><strong>B.M.N.S.Buddhasinghe</strong>
+              <span>Account name</span><strong>***********</strong>
             </li>
-            <li><span>Account number</span><strong>90803600</strong></li>
-            <li><span>Branch</span><strong>Ruwanwella Branch</strong></li>
+            <li><span>Account number</span><strong>***********</strong></li>
+            <li><span>Branch</span><strong>***********</strong></li>
           </ul>
-          <p class="bank-note">Use your full name as the payment reference.</p>
+          <p class="bank-note">Booking is temporarily paused due to a server update. Please check back shortly — we appreciate your patience.</p>
         </div>
       </div>
 
