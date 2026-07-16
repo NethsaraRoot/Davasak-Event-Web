@@ -133,9 +133,28 @@
 
           <p v-if="error" class="error-text">{{ error }}</p>
 
-          <button type="submit" class="submit-btn" :disabled="loading">
+          <!-- Maintenance notice -->
+          <div v-if="MAINTENANCE_MODE" class="maintenance-notice">
+            <span class="maintenance-icon" aria-hidden="true">⚠</span>
+            <p>
+              Booking is temporarily paused due to a server update. Please
+              check back shortly — we appreciate your patience.
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            class="submit-btn"
+            :disabled="loading || MAINTENANCE_MODE"
+          >
             <span class="btn-shimmer" />
-            {{ loading ? "SUBMITTING..." : "CONFIRM BOOKING" }}
+            {{
+              MAINTENANCE_MODE
+                ? "TEMPORARILY UNAVAILABLE"
+                : loading
+                  ? "SUBMITTING..."
+                  : "CONFIRM BOOKING"
+            }}
           </button>
         </form>
 
@@ -161,6 +180,9 @@
 import { reactive, ref, computed } from "vue";
 import api from "../api/axios";
 
+// Flip to false once the server update is done and bookings should re-open.
+const MAINTENANCE_MODE = true;
+
 const loading = ref(false);
 const submitted = ref(false);
 const error = ref("");
@@ -185,6 +207,8 @@ function handleFile(e) {
 }
 
 async function handleSubmit() {
+  if (MAINTENANCE_MODE) return;
+
   error.value = "";
   if (!form.slip) {
     error.value = "Please upload your payment slip.";
@@ -583,6 +607,32 @@ async function handleSubmit() {
   color: #e0685c;
   font-size: 12.5px;
   margin: -8px 0 16px;
+}
+
+/* ── Maintenance notice ── */
+.maintenance-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(240, 200, 74, 0.06);
+  border: 1px solid rgba(212, 175, 90, 0.35);
+  border-radius: 8px;
+  padding: 13px 14px;
+  margin: -4px 0 16px;
+}
+
+.maintenance-icon {
+  font-size: 15px;
+  color: #f0c84a;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.maintenance-notice p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #d9c9a3;
 }
 
 .submit-btn {
