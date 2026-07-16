@@ -69,7 +69,7 @@
 
         <router-link to="/tickets" class="mobile-ticket-btn" @click="closeMenu">
           <span class="btn-shimmer" />
-          GET TICKET
+          GET TICKETS 
         </router-link>
 
       </div>
