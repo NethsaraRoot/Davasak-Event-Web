@@ -63,9 +63,7 @@
 
         <div class="menu-deco-line" />
 
-        <button class="mobile-login-btn" @click="openLoginFromMobile">
-          <span class="link-num">→</span> LOGIN
-        </button>
+        
 
         <router-link to="/tickets" class="mobile-ticket-btn" @click="closeMenu">
           <span class="btn-shimmer" />
@@ -76,26 +74,7 @@
     </Transition>
 
     <!-- Login Modal (UI only) -->
-    <Transition name="login-fade">
-      <div class="login-overlay" v-if="showLogin" @click.self="showLogin = false">
-        <div class="login-card">
-          <button class="login-close" @click="showLogin = false" aria-label="Close">×</button>
 
-          <span class="login-eyebrow">Members Only</span>
-          <h2 class="login-title">Step Inside</h2>
-          <p class="login-sub">Sign in to book tickets & track your orders</p>
-
-          <button class="google-btn">
-            <span class="google-icon">G</span>
-            Continue with Google
-          </button>
-
-          <p class="login-footnote">
-            By continuing you agree to our Terms & Privacy Policy
-          </p>
-        </div>
-      </div>
-    </Transition>
 
   </header>
 </template>
