@@ -125,10 +125,9 @@ export default {
         { char: "♬", x: "93%", d: "6s", s: "1.3rem", delay: "3s" },
       ],
       stats: [
-        { num: "50K+", label: "Attendees" },
-        { num: "30+", label: "Artists" },
-        { num: "3", label: "Stages" },
-        { num: "12h", label: "Non-Stop" },
+        { num: "1K+", label: "Attendees" },
+        { num: "4+", label: "Artists" },
+        { num: "5h+", label: "Non-Stop" },
       ],
     };
   },
@@ -555,13 +554,7 @@ export default {
   font-size: clamp(2.8rem, 5.5vw, 5rem);
   line-height: 1;
   letter-spacing: 0.02em;
-  color: linear-gradient(
-    135deg,
-    #f5d376 0%,
-    #c9a84c 40%,
-    #a67c2e 70%,
-    #f5d376 100%
-  );
+  color: var(--white);
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
@@ -589,6 +582,7 @@ export default {
 /* italic gradient words */
 .story-heading em {
   font-style: italic;
+  color: var(--g3);
   background: var(--gold-grad);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -705,6 +699,7 @@ export default {
   font-family: "Bebas Neue", sans-serif;
   font-size: 1.9rem;
   line-height: 1;
+  color: var(--g3);
   background: var(--gold-grad);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -730,7 +725,7 @@ export default {
   border: none;
   border-radius: 6px;
   background: var(--gold-grad);
-  color: #000;
+  color: #000000;
   font-family: "Bebas Neue", sans-serif;
   font-size: 1.05rem;
   letter-spacing: 0.12em;

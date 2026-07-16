@@ -399,7 +399,19 @@
 
     <!-- Mobile Bottom CTA -->
     <div class="mobile-cta">
-      <router-link to="/tickets" class="mobile-cta-btn">GET TICKETS <br /> 500 SEATS ONLY</router-link>
+      <router-link to="/tickets" class="mobile-cta-btn">
+        <span class="mcb-shine" aria-hidden="true"></span>
+        <span class="mcb-glow" aria-hidden="true"></span>
+        <span class="mcb-text">
+          <span class="mcb-main">GET TICKETS</span>
+          <span class="mcb-sub">
+            <span class="mcb-sub-dot" />500 SEATS ONLY<span class="mcb-sub-dot" />
+          </span>
+        </span>
+        <svg class="mcb-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </router-link>
     </div>
   </section>
 </template>
@@ -443,7 +455,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap");
 
 /* ── CSS Variables ── */
 .hero {
@@ -1153,50 +1165,192 @@ onMounted(() => {
   pointer-events: none;
 }
 
+/* Restyled: two-font layout (bold display headline + delicate serif subtext),
+   soft glow halo, sweeping shine, and a subtle arrow that nudges on hover. */
 .mobile-cta-btn {
   pointer-events: auto;
-
+  position: relative;
   border: none;
   cursor: pointer;
-
-  padding: 14px 32px;
-  border-radius: 999px;
-
-  font-family: "Cinzel", serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
-  font-weight: 700;
-
-  color: #080500;
-
-  background: linear-gradient(
-    135deg,
-    #c9952a 0%,
-    #fff8dc 45%,
-    #f0c84a 70%,
-    #c9952a 100%
-  );
-
-  box-shadow:
-    0 0 25px rgba(201, 149, 42, 0.45),
-    0 8px 25px rgba(0, 0, 0, 0.45);
-
-  transition: 0.3s ease;
+  overflow: hidden;
 
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.7rem;
+
+  padding: 15px 30px 14px;
+  border-radius: 999px;
+
   text-decoration: none;
+  color: #0b0700;
+
+  background: linear-gradient(
+    135deg,
+    #8a5c00 0%,
+    #c9952a 22%,
+    #fff8dc 48%,
+    #f0c84a 72%,
+    #c9952a 100%
+  );
+  background-size: 240% auto;
+  animation: mcbShimBg 5s linear infinite;
+
+  box-shadow:
+    0 0 0 1px rgba(255, 248, 220, 0.35) inset,
+    0 2px 0 rgba(255, 255, 255, 0.4) inset,
+    0 -2px 6px rgba(0, 0, 0, 0.25) inset,
+    0 10px 30px rgba(201, 149, 42, 0.45),
+    0 3px 14px rgba(0, 0, 0, 0.5);
+
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease;
+}
+@keyframes mcbShimBg {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 240% center;
+  }
+}
+
+/* Soft ambient glow that breathes behind the button */
+.mcb-glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(240, 200, 74, 0.55) 0%,
+    transparent 72%
+  );
+  filter: blur(10px);
+  z-index: -1;
+  animation: mcbGlowPulse 2.4s ease-in-out infinite;
+}
+@keyframes mcbGlowPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+/* Diagonal light sweep across the button face */
+.mcb-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 65%
+  );
+  background-size: 220% 100%;
+  animation: mcbShinePass 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes mcbShinePass {
+  0% {
+    background-position: -120% center;
+  }
+  100% {
+    background-position: 220% center;
+  }
+}
+
+.mcb-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+  position: relative;
+  z-index: 1;
+}
+
+/* Bold cinematic display font for the headline */
+.mcb-main {
+  font-family: "Cinzel Decorative", "Cinzel", serif;
+  font-weight: 900;
+  font-size: 0.92rem;
+  letter-spacing: 0.14em;
+  color: #100b00;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Delicate italic serif for the subtext, sets it apart from the headline */
+.mcb-sub {
+  margin-top: 3px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  color: rgba(20, 14, 0, 0.72);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.mcb-sub-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(20, 14, 0, 0.45);
+}
+
+.mcb-arrow {
+  position: relative;
+  z-index: 1;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  transition: transform 0.28s ease;
 }
 
 .mobile-cta-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 0 0 1px rgba(255, 248, 220, 0.45) inset,
+    0 2px 0 rgba(255, 255, 255, 0.45) inset,
+    0 -2px 6px rgba(0, 0, 0, 0.25) inset,
+    0 14px 38px rgba(201, 149, 42, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.55);
+}
+.mobile-cta-btn:hover .mcb-arrow {
+  transform: translateX(4px);
+}
+.mobile-cta-btn:active {
+  transform: translateY(-1px) scale(0.99);
 }
 
 /* Desktop hide */
 @media (min-width: 769px) {
   .mobile-cta {
     display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .mobile-cta-btn {
+    padding: 13px 24px 12px;
+    gap: 0.55rem;
+  }
+  .mcb-main {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  .mcb-sub {
+    font-size: 0.54rem;
+    letter-spacing: 0.18em;
+  }
+  .mcb-arrow {
+    width: 15px;
+    height: 15px;
   }
 }
 
@@ -1219,6 +1373,15 @@ onMounted(() => {
   .hero__cta {
     padding: 0.82rem 1.7rem;
     font-size: 0.6rem;
+  }
+  .mobile-cta-btn {
+    padding: 12px 20px 11px;
+  }
+  .mcb-main {
+    font-size: 0.74rem;
+  }
+  .mcb-sub {
+    font-size: 0.5rem;
   }
 }
 
