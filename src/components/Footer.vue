@@ -18,7 +18,7 @@
       <div class="footer__brand">
         <a href="https://centryxit.com" target="_blank" rel="noopener noreferrer" class="footer__logo-link">
         <div class="footer__logo-wrap">
-          <img src="../assets/image/Logo.png" alt="SOUNDFEST logo" class="footer__logo" />
+          <img src="../assets/image/Logo/Logo.png" alt="SOUNDFEST logo" class="footer__logo" />
         </div>
       </a>
 
