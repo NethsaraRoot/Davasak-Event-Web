@@ -1,16 +1,17 @@
 <template>
   <section class="ticket-page">
-
     <!-- Hero -->
     <div class="hero">
       <span class="eyebrow">Reserve your spot</span>
       <h1>Book your ticket</h1>
-      <p class="sub">Pick a ticket type, transfer the amount below, then upload your slip to confirm your seat.</p>
+      <p class="sub">
+        Pick a ticket type, transfer the amount below, then upload your slip to
+        confirm your seat.
+      </p>
     </div>
 
     <!-- Ticket shell — one physical ticket, torn into two stubs -->
     <div class="ticket-shell">
-
       <!-- Info stub -->
       <div class="stub stub-info">
         <div class="ticket-art">
@@ -54,7 +55,9 @@
           <span class="block-label">02 — Transfer payment</span>
           <ul class="bank-list">
             <li><span>Bank</span><strong>BOC</strong></li>
-            <li><span>Account name</span><strong>B.M.N.S.Buddhasinghe</strong></li>
+            <li>
+              <span>Account name</span><strong>B.M.N.S.Buddhasinghe</strong>
+            </li>
             <li><span>Account number</span><strong>90803600</strong></li>
             <li><span>Branch</span><strong>Ruwanwella Branch</strong></li>
           </ul>
@@ -79,7 +82,11 @@
           </div>
         </div>
 
-        <form v-if="!submitted" @submit.prevent="handleSubmit" class="ticket-form">
+        <form
+          v-if="!submitted"
+          @submit.prevent="handleSubmit"
+          class="ticket-form"
+        >
           <div class="field">
             <label for="fullName">Full name</label>
             <input
@@ -104,14 +111,20 @@
 
           <div class="field">
             <label for="slip">Payment slip</label>
-            <label class="upload-box" :class="{ 'has-file': form.slip }" for="slip">
-              <span v-if="!form.slip">Click to upload payment slip (image or PDF)</span>
+            <label
+              class="upload-box"
+              :class="{ 'has-file': form.slip }"
+              for="slip"
+            >
+              <span v-if="!form.slip"
+                >Click to upload payment slip (image)</span
+              >
               <span v-else class="file-chosen">✓ {{ form.slip.name }}</span>
             </label>
             <input
               id="slip"
               type="file"
-              accept="image/*,.pdf"
+              accept="image/*"
               @change="handleFile"
               required
               class="sr-only"
@@ -122,85 +135,100 @@
 
           <button type="submit" class="submit-btn" :disabled="loading">
             <span class="btn-shimmer" />
-            {{ loading ? 'SUBMITTING...' : 'CONFIRM BOOKING' }}
+            {{ loading ? "SUBMITTING..." : "CONFIRM BOOKING" }}
           </button>
         </form>
 
         <div v-else class="success-state">
           <div class="success-icon">&#10003;</div>
           <h3>Booking received</h3>
-          <p>We've got your details, {{ form.name }}. Your <strong>{{ ticketTypeLabel }}</strong>
-            confirmation will be sent to <strong>{{ form.email }}</strong> once your slip is verified.</p>
+          <p>
+            We've got your details, {{ form.name }}. Your
+            <strong>{{ ticketTypeLabel }}</strong> confirmation will be sent to
+            <strong>{{ form.email }}</strong> once your slip is verified.
+          </p>
           <router-link to="/" class="submit-btn back-link">
             <span class="btn-shimmer" />
             BACK TO HOME
           </router-link>
         </div>
       </div>
-
     </div>
   </section>
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed } from "vue";
+import api from "../api/axios";
 
-const loading   = ref(false)
-const submitted = ref(false)
-const error     = ref('')
+const loading = ref(false);
+const submitted = ref(false);
+const error = ref("");
 
 const form = reactive({
-  name: '',
-  email: '',
-  ticketType: 'general',
-  slip: null
-})
+  name: "",
+  email: "",
+  ticketType: "general",
+  slip: null,
+});
 
 const ticketTypeLabel = computed(() =>
-  form.ticketType === 'vip' ? 'VIP Admission' : 'General Admission'
-)
+  form.ticketType === "vip" ? "VIP Admission" : "General Admission",
+);
 
 const selectedPrice = computed(() =>
-  form.ticketType === 'vip' ? 'Rs. 1,700' : 'Rs. 1,200'
-)
+  form.ticketType === "vip" ? "Rs. 1,700" : "Rs. 1,200",
+);
 
 function handleFile(e) {
-  form.slip = e.target.files[0] || null
+  form.slip = e.target.files[0] || null;
 }
 
 async function handleSubmit() {
-  error.value = ''
+  error.value = "";
   if (!form.slip) {
-    error.value = 'Please upload your payment slip.'
-    return
+    error.value = "Please upload your payment slip.";
+    return;
   }
-  loading.value = true
-  try {
-    // Replace this block with your real API call, e.g.:
-    // const data = new FormData()
-    // data.append('name', form.name)
-    // data.append('email', form.email)
-    // data.append('ticketType', form.ticketType)
-    // data.append('slip', form.slip)
-    // await fetch('/api/book-ticket', { method: 'POST', body: data })
 
-    await new Promise((resolve) => setTimeout(resolve, 900))
-    submitted.value = true
+  loading.value = true;
+  try {
+    const data = new FormData();
+    data.append("buyer_name", form.name);
+    data.append("buyer_email", form.email);
+    data.append("ticket_type", form.ticketType);
+    data.append("slip_image", form.slip);
+
+    await api.post("/tickets/upload/", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    submitted.value = true;
   } catch (err) {
-    error.value = 'Something went wrong. Please try again.'
+    if (err.response?.data) {
+      const fieldErrors = Object.values(err.response.data).flat().join(" ");
+      error.value = fieldErrors || "Something went wrong. Please try again.";
+    } else {
+      error.value =
+        "Could not reach the server. Please check your connection and try again.";
+    }
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap");
 
 .ticket-page {
   min-height: 100vh;
   background:
-    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201, 149, 42, 0.10), transparent 60%),
+    radial-gradient(
+      ellipse 900px 500px at 50% -10%,
+      rgba(201, 149, 42, 0.1),
+      transparent 60%
+    ),
     #08070a;
   padding: 150px 6% 100px;
   box-sizing: border-box;
@@ -215,7 +243,7 @@ async function handleSubmit() {
 }
 
 .eyebrow {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 11.5px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -223,7 +251,7 @@ async function handleSubmit() {
 }
 
 .hero h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-style: italic;
   font-size: clamp(34px, 5vw, 46px);
   margin: 12px 0 14px;
@@ -260,12 +288,16 @@ async function handleSubmit() {
 }
 
 .stub-info {
-  background: linear-gradient(165deg, rgba(255,255,255,0.02) 0%, transparent 60%);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 60%
+  );
 }
 
 .block-label {
   display: block;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 10.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -299,7 +331,9 @@ async function handleSubmit() {
   padding: 13px 16px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .ticket-type-card:hover {
@@ -326,7 +360,7 @@ async function handleSubmit() {
 }
 
 .ticket-type-card.selected .check-dot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 3px;
   border-radius: 50%;
@@ -341,7 +375,7 @@ async function handleSubmit() {
 }
 
 .type-name {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 12.5px;
   letter-spacing: 0.06em;
   color: #f3ead9;
@@ -353,7 +387,7 @@ async function handleSubmit() {
 }
 
 .type-price {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-weight: 700;
   color: #f0c84a;
   font-size: 14px;
@@ -413,8 +447,12 @@ async function handleSubmit() {
   flex-shrink: 0;
 }
 
-.notch-top { margin-top: -11px; }
-.notch-bottom { margin-bottom: -11px; }
+.notch-top {
+  margin-top: -11px;
+}
+.notch-bottom {
+  margin-bottom: -11px;
+}
 
 .tear-line {
   flex: 1;
@@ -425,7 +463,11 @@ async function handleSubmit() {
 
 /* ── Form stub ── */
 .stub-form {
-  background: linear-gradient(165deg, rgba(240,200,74,0.03) 0%, transparent 55%);
+  background: linear-gradient(
+    165deg,
+    rgba(240, 200, 74, 0.03) 0%,
+    transparent 55%
+  );
 }
 
 .amount-due {
@@ -441,14 +483,14 @@ async function handleSubmit() {
 }
 
 .amount-value {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-style: italic;
   font-size: 32px;
   color: #f0c84a;
 }
 
 .amount-type {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 11px;
   letter-spacing: 0.1em;
   color: #a8987a;
@@ -465,7 +507,7 @@ async function handleSubmit() {
 
 .field label {
   display: block;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 10.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -473,8 +515,8 @@ async function handleSubmit() {
   margin-bottom: 8px;
 }
 
-.field input[type='text'],
-.field input[type='email'] {
+.field input[type="text"],
+.field input[type="email"] {
   width: 100%;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(212, 175, 90, 0.25);
@@ -484,7 +526,9 @@ async function handleSubmit() {
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .field input::placeholder {
@@ -507,7 +551,9 @@ async function handleSubmit() {
   text-align: center;
   cursor: pointer;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .upload-box:hover {
@@ -540,7 +586,7 @@ async function handleSubmit() {
 }
 
 .submit-btn {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   width: 100%;
   padding: 14px;
   border-radius: 50px;
@@ -571,13 +617,19 @@ async function handleSubmit() {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.3s ease;
   margin-top: 8px;
 }
 
 @keyframes btnShim {
-  0%   { background-position: 0% center; }
-  100% { background-position: 220% center; }
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 220% center;
+  }
 }
 
 .btn-shimmer {
@@ -594,8 +646,12 @@ async function handleSubmit() {
 }
 
 @keyframes sweep {
-  0%   { background-position: -100% center; }
-  100% { background-position: 250% center; }
+  0% {
+    background-position: -100% center;
+  }
+  100% {
+    background-position: 250% center;
+  }
 }
 
 .submit-btn:hover {
@@ -640,7 +696,7 @@ async function handleSubmit() {
 }
 
 .success-state h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-style: italic;
   font-size: 24px;
   color: #f3ead9;
@@ -670,8 +726,14 @@ async function handleSubmit() {
     padding: 3px 0;
   }
 
-  .notch-top { margin-top: 0; margin-left: -11px; }
-  .notch-bottom { margin-bottom: 0; margin-right: -11px; }
+  .notch-top {
+    margin-top: 0;
+    margin-left: -11px;
+  }
+  .notch-bottom {
+    margin-bottom: 0;
+    margin-right: -11px;
+  }
 
   .tear-line {
     width: auto;
