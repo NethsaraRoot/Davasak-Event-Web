@@ -9,7 +9,7 @@
     <div class="top">
       <div class="top-badge">
         <span class="badge-dot"></span>
-        LINEUP 2026
+        LINEUP DAWASAK
         <span class="badge-dot"></span>
       </div>
       <h2 class="section-title">Featured Artists</h2>
@@ -107,7 +107,7 @@ const artists = [
   { name: "Uvindu Ayshcharya", role: "", genre: "Musician", image: uvinduImg },
   { name: "Pamith Mandiv", role: "", genre: "Musician", image: pamithImg },
   {
-    name: "Ramindu Yashmintha",
+    name: "Ramidu Yashmintha",
     role: "",
     genre: "Musician",
     image: raminduImg,

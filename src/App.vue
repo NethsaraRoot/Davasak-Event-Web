@@ -9,7 +9,7 @@
     <Footer />
 
     <audio ref="bgMusic" loop>
-      <source src="../src/assets/music/wassak-wela-raveen-tharuka.mp3" type="audio/mpeg" />
+      <source src="../src/assets/music/me-hitha-sanasa-uvindu-ayshcharya.mp3" type="audio/mpeg" />
     </audio>
 
     <!-- Music Control -->

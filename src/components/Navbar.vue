@@ -3,18 +3,18 @@
 
     <!-- Logo → clicks scroll to #home -->
     <div class="logo-wrap">
-      <a @click="scrollToHero" class="logo-link">
+      <a @click="goToSection('home')" class="logo-link">
         <img src="../assets/logo.png" alt="logo" class="logo-img" />
       </a>
     </div>
 
     <!-- Desktop Nav -->
     <nav class="nav-links">
-      <a href="#home">HOME</a>
-      <a href="#story">THE STORY</a>
-      <a href="#artists">ARTISTS</a>
-      <a href="#band">BAND</a>
-      <a href="#gallery">GALLERY</a>
+      <a href="#home"    @click.prevent="goToSection('home')">HOME</a>
+      <a href="#story"   @click.prevent="goToSection('story')">THE STORY</a>
+      <a href="#artists" @click.prevent="goToSection('artists')">ARTISTS</a>
+      <a href="#band"    @click.prevent="goToSection('band')">BAND</a>
+      <a href="#gallery" @click.prevent="goToSection('gallery')">GALLERY</a>
       <!-- <a href="#contact">CONTACT</a> -->
     </nav>
 
@@ -22,10 +22,10 @@
     <div class="nav-actions">
       <!-- <button class="login-btn" @click="showLogin = true">LOGIN</button> -->
 
-      <a href="#tickets" class="ticket-btn" @click.prevent="showTicketModal = true">
+      <router-link to="/tickets" class="ticket-btn">
         <span class="btn-shimmer" />
         GET TICKET
-      </a>
+      </router-link>
     </div>
 
     <!-- Hamburger -->
@@ -53,11 +53,11 @@
         <img src="../assets/logo.png" alt="logo" class="menu-logo" />
 
         <nav class="menu-links">
-          <a href="#home"    @click="closeMenu"><span class="link-num">01</span>HOME</a>
-          <a href="#story"   @click="closeMenu"><span class="link-num">02</span>THE STORY</a>
-          <a href="#artists" @click="closeMenu"><span class="link-num">03</span>ARTISTS</a>
-          <a href="#band"    @click="closeMenu"><span class="link-num">04</span>BAND</a>
-          <a href="#gallery" @click="closeMenu"><span class="link-num">05</span>GALLERY</a>
+          <a href="#home"    @click.prevent="goToSection('home')"><span class="link-num">01</span>HOME</a>
+          <a href="#story"   @click.prevent="goToSection('story')"><span class="link-num">02</span>THE STORY</a>
+          <a href="#artists" @click.prevent="goToSection('artists')"><span class="link-num">03</span>ARTISTS</a>
+          <a href="#band"    @click.prevent="goToSection('band')"><span class="link-num">04</span>BAND</a>
+          <a href="#gallery" @click.prevent="goToSection('gallery')"><span class="link-num">05</span>GALLERY</a>
           <!-- <a href="#contact" @click="closeMenu"><span class="link-num">06</span>CONTACT</a> -->
         </nav>
 
@@ -67,10 +67,10 @@
           <span class="link-num">→</span> LOGIN
         </button>
 
-        <a href="#tickets" class="mobile-ticket-btn" @click.prevent="openTicketFromMobile">
+        <router-link to="/tickets" class="mobile-ticket-btn" @click="closeMenu">
           <span class="btn-shimmer" />
           GET TICKET
-        </a>
+        </router-link>
 
       </div>
     </Transition>
@@ -97,148 +97,41 @@
       </div>
     </Transition>
 
-    <!-- Get Ticket Modal -->
-    <Transition name="login-fade">
-      <div class="login-overlay" v-if="showTicketModal" @click.self="closeTicketModal">
-        <div class="ticket-card">
-          <button class="login-close" @click="closeTicketModal" aria-label="Close">×</button>
-
-          <span class="login-eyebrow">Reserve your spot</span>
-          <h2 class="login-title">Book your ticket</h2>
-
-          <form v-if="!ticketSubmitted" @submit.prevent="handleTicketSubmit" class="ticket-form">
-            <div class="field">
-              <label for="tName">Full name</label>
-              <input
-                id="tName"
-                v-model.trim="ticketForm.name"
-                type="text"
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
-
-            <div class="field">
-              <label for="tEmail">Email</label>
-              <input
-                id="tEmail"
-                v-model.trim="ticketForm.email"
-                type="email"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
-
-            <div class="field">
-              <label for="tSlip">Payment slip</label>
-              <label class="upload-box" :class="{ 'has-file': ticketForm.slip }" for="tSlip">
-                <span v-if="!ticketForm.slip">Click to upload payment slip (image or PDF)</span>
-                <span v-else>{{ ticketForm.slip.name }}</span>
-              </label>
-              <input
-                id="tSlip"
-                type="file"
-                accept="image/*,.pdf"
-                @change="handleTicketFile"
-                required
-                class="sr-only"
-              />
-            </div>
-
-            <p v-if="ticketError" class="error-text">{{ ticketError }}</p>
-
-            <button type="submit" class="ticket-btn submit-btn" :disabled="ticketLoading">
-              <span class="btn-shimmer" />
-              {{ ticketLoading ? 'SUBMITTING...' : 'CONFIRM BOOKING' }}
-            </button>
-          </form>
-
-          <div v-else class="success-state">
-            <div class="success-icon">&#10003;</div>
-            <h3>Booking received</h3>
-            <p>We've got your details, {{ ticketForm.name }}. Confirmation will be sent to
-              <strong>{{ ticketForm.email }}</strong> once your payment slip is verified.</p>
-            <button class="ticket-btn submit-btn" @click="closeTicketModal">
-              <span class="btn-shimmer" />
-              DONE
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
   </header>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route  = useRoute()
 
 const menuOpen   = ref(false)
 const isScrolled = ref(false)
 const showLogin  = ref(false)
 
-/* ── Ticket modal state ── */
-const showTicketModal = ref(false)
-const ticketLoading    = ref(false)
-const ticketSubmitted  = ref(false)
-const ticketError      = ref('')
-
-const ticketForm = reactive({
-  name: '',
-  email: '',
-  slip: null
-})
-
-function handleTicketFile(e) {
-  ticketForm.slip = e.target.files[0] || null
-}
-
-function openTicketFromMobile() {
+/* ── Nav link click → go home first (if needed), then scroll to section ── */
+function goToSection(id) {
   closeMenu()
-  showTicketModal.value = true
-}
 
-function closeTicketModal() {
-  showTicketModal.value = false
-  ticketSubmitted.value = false
-  ticketError.value = ''
-  ticketForm.name = ''
-  ticketForm.email = ''
-  ticketForm.slip = null
-}
-
-async function handleTicketSubmit() {
-  ticketError.value = ''
-  if (!ticketForm.slip) {
-    ticketError.value = 'Please upload your payment slip.'
-    return
+  const scroll = () => {
+    if (id === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-  ticketLoading.value = true
-  try {
-    // Replace this block with your real API call, e.g.:
-    // const data = new FormData()
-    // data.append('name', ticketForm.name)
-    // data.append('email', ticketForm.email)
-    // data.append('slip', ticketForm.slip)
-    // await fetch('/api/book-ticket', { method: 'POST', body: data })
 
-    await new Promise((resolve) => setTimeout(resolve, 900))
-    ticketSubmitted.value = true
-  } catch (err) {
-    ticketError.value = 'Something went wrong. Please try again.'
-  } finally {
-    ticketLoading.value = false
-  }
-}
-
-/* ── Logo click → smooth scroll to hero ── */
-function scrollToHero() {
-  closeMenu()
-  const hero = document.getElementById('home')
-  if (hero) {
-    hero.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  if (route.path !== '/') {
+    // Not on the home page (e.g. on /tickets) — navigate back first
+    router.push('/').then(() => {
+      // wait a tick for the home view to mount before scrolling
+      setTimeout(scroll, 60)
+    })
   } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scroll()
   }
 }
 
@@ -261,12 +154,11 @@ function handleScroll() {
   isScrolled.value = window.scrollY > 40
 }
 
-/* Close menu/login/ticket on Escape key */
+/* Close menu/login on Escape key */
 function handleKeydown(e) {
   if (e.key === 'Escape') {
     closeMenu()
     showLogin.value = false
-    closeTicketModal()
   }
 }
 
@@ -483,13 +375,6 @@ onUnmounted(() => {
 .ticket-btn:active,
 .mobile-ticket-btn:active {
   transform: scale(0.97);
-}
-
-.ticket-btn.submit-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  animation: none;
-  transform: none;
 }
 
 /* ── Hamburger ── */
@@ -812,125 +697,6 @@ onUnmounted(() => {
   line-height: 1.5;
 }
 
-/* ── Ticket Modal ── */
-.ticket-card {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  background: linear-gradient(160deg, #17130d 0%, #0d0b08 100%);
-  border: 1px solid rgba(212, 175, 90, 0.25);
-  border-radius: 6px;
-  padding: 44px 36px 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(212, 175, 90, 0.05);
-  text-align: left;
-}
-
-.ticket-form .field {
-  margin-bottom: 18px;
-}
-
-.ticket-form label {
-  display: block;
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: #d4af5a;
-  margin-bottom: 8px;
-}
-
-.ticket-form input[type='text'],
-.ticket-form input[type='email'] {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(212, 175, 90, 0.25);
-  border-radius: 6px;
-  padding: 11px 13px;
-  color: #f3ead9;
-  font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease;
-}
-
-.ticket-form input:focus {
-  border-color: rgba(240, 200, 74, 0.8);
-}
-
-.upload-box {
-  display: block;
-  width: 100%;
-  border: 1px dashed rgba(212, 175, 90, 0.4);
-  border-radius: 6px;
-  padding: 15px 12px;
-  font-size: 12.5px;
-  color: #a8987a;
-  text-align: center;
-  cursor: pointer;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.upload-box:hover {
-  border-color: rgba(240, 200, 74, 0.8);
-  color: #f0c84a;
-}
-
-.upload-box.has-file {
-  border-style: solid;
-  border-color: rgba(240, 200, 74, 0.8);
-  color: #f0c84a;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
-.error-text {
-  color: #e0685c;
-  font-size: 12.5px;
-  margin: -8px 0 16px;
-}
-
-.ticket-btn.submit-btn {
-  width: 100%;
-  margin-top: 6px;
-}
-
-.success-state {
-  text-align: center;
-  padding: 8px 0 4px;
-}
-
-.success-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #f0c84a, #c9952a);
-  color: #0a0700;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-}
-
-.success-state h3 {
-  font-family: 'Playfair Display', serif;
-  color: #f3ead9;
-  margin: 0 0 10px;
-}
-
-.success-state p {
-  color: #a8987a;
-  font-size: 13.5px;
-  line-height: 1.6;
-  margin-bottom: 22px;
-}
-
 /* ── Responsive ── */
 @media (max-width: 960px) {
   .nav-links,
@@ -972,8 +738,7 @@ onUnmounted(() => {
     font-size: 0.76rem;
   }
 
-  .login-card,
-  .ticket-card {
+  .login-card {
     padding: 36px 26px 26px;
   }
 
