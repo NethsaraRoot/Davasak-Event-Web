@@ -67,8 +67,8 @@
       </div>
 
       <h2 class="story-heading">
-        <span class="line-1">A Night Full Of</span>
-        <span class="line-2">Music Lights </span>
+        <span class="line-1">THE FIRST CHAPTER OF A</span>
+        <span class="line-2">SOULFUL MUSICAL STORY </span>
       </h2>
 
       <div class="divider-bar">

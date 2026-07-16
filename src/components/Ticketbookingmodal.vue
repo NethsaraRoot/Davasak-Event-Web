@@ -14,7 +14,7 @@
       <!-- Info stub -->
       <div class="stub stub-info">
         <div class="ticket-art">
-          <img src="../assets/ticket.jpg" alt="Event ticket" />
+          <img src="../assets/image/Ticket.png" alt="Event ticket" />
         </div>
 
         <div class="stub-block">
