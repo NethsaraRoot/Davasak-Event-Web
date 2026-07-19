@@ -37,16 +37,18 @@
 
             <button
               type="button"
-              class="ticket-type-card"
-              :class="{ selected: form.ticketType === 'vip' }"
-              @click="form.ticketType = 'vip'"
+              class="ticket-type-card sold-out"
+              disabled
+              aria-disabled="true"
             >
               <span class="check-dot" aria-hidden="true" />
               <div class="type-info">
                 <span class="type-name">VIP Admission</span>
                 <span class="type-desc">Priority entry & perks</span>
               </div>
-              <span class="type-price">Rs. 1,700</span>
+              <span class="type-price type-price--soldout">
+                <span class="soldout-badge">SOLD OUT</span>
+              </span>
             </button>
           </div>
         </div>
@@ -54,14 +56,14 @@
         <div class="stub-block">
           <span class="block-label">02 — Transfer payment</span>
           <ul class="bank-list">
-            <li><span>Bank</span><strong>***********</strong></li>
+            <li><span>Bank</span><strong>BOC</strong></li>
             <li>
-              <span>Account name</span><strong>***********</strong>
+              <span>Account name</span><strong>B.M.N.S.Buddhasinghe</strong>
             </li>
-            <li><span>Account number</span><strong>***********</strong></li>
-            <li><span>Branch</span><strong>***********</strong></li>
+            <li><span>Account number</span><strong>90803600</strong></li>
+            <li><span>Branch</span><strong>Ruwanwella Branch</strong></li>
           </ul>
-          <p class="bank-note">Booking is temporarily paused due to a server update. Please check back shortly — we appreciate your patience.</p>
+          <p class="bank-note">Use your full name as the payment reference.</p>
         </div>
       </div>
 
@@ -133,28 +135,9 @@
 
           <p v-if="error" class="error-text">{{ error }}</p>
 
-          <!-- Maintenance notice -->
-          <div v-if="MAINTENANCE_MODE" class="maintenance-notice">
-            <span class="maintenance-icon" aria-hidden="true">⚠</span>
-            <p>
-              Booking is temporarily paused due to a server update. Please
-              check back shortly — we appreciate your patience.
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            class="submit-btn"
-            :disabled="loading || MAINTENANCE_MODE"
-          >
+          <button type="submit" class="submit-btn" :disabled="loading">
             <span class="btn-shimmer" />
-            {{
-              MAINTENANCE_MODE
-                ? "TEMPORARILY UNAVAILABLE"
-                : loading
-                  ? "SUBMITTING..."
-                  : "CONFIRM BOOKING"
-            }}
+            {{ loading ? "SUBMITTING..." : "CONFIRM BOOKING" }}
           </button>
         </form>
 
@@ -180,9 +163,6 @@
 import { reactive, ref, computed } from "vue";
 import api from "../api/axios";
 
-// Flip to false once the server update is done and bookings should re-open.
-const MAINTENANCE_MODE = true;
-
 const loading = ref(false);
 const submitted = ref(false);
 const error = ref("");
@@ -207,8 +187,6 @@ function handleFile(e) {
 }
 
 async function handleSubmit() {
-  if (MAINTENANCE_MODE) return;
-
   error.value = "";
   if (!form.slip) {
     error.value = "Please upload your payment slip.";
@@ -367,6 +345,45 @@ async function handleSubmit() {
 .ticket-type-card.selected {
   border-color: #f0c84a;
   background: rgba(240, 200, 74, 0.07);
+}
+
+/* ── Sold out state ── */
+.ticket-type-card.sold-out {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: grayscale(0.4);
+  border-color: rgba(212, 175, 90, 0.15);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.ticket-type-card.sold-out:hover {
+  border-color: rgba(212, 175, 90, 0.15);
+}
+
+.ticket-type-card.sold-out .check-dot {
+  border-color: rgba(212, 175, 90, 0.2);
+}
+
+.ticket-type-card.sold-out .type-name,
+.ticket-type-card.sold-out .type-desc {
+  color: #6e6450;
+}
+
+.type-price--soldout {
+  display: inline-flex;
+}
+
+.soldout-badge {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #e0685c;
+  border: 1px solid rgba(224, 104, 92, 0.55);
+  background: rgba(224, 104, 92, 0.08);
+  padding: 5px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 .check-dot {
@@ -607,32 +624,6 @@ async function handleSubmit() {
   color: #e0685c;
   font-size: 12.5px;
   margin: -8px 0 16px;
-}
-
-/* ── Maintenance notice ── */
-.maintenance-notice {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: rgba(240, 200, 74, 0.06);
-  border: 1px solid rgba(212, 175, 90, 0.35);
-  border-radius: 8px;
-  padding: 13px 14px;
-  margin: -4px 0 16px;
-}
-
-.maintenance-icon {
-  font-size: 15px;
-  color: #f0c84a;
-  line-height: 1.3;
-  flex-shrink: 0;
-}
-
-.maintenance-notice p {
-  margin: 0;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: #d9c9a3;
 }
 
 .submit-btn {
