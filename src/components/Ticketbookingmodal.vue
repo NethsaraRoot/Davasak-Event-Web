@@ -43,7 +43,7 @@
             >
               <span class="check-dot" aria-hidden="true" />
               <div class="type-info">
-                <span class="type-name">VIP Admission</span>
+                <span class="type-name">VIP Admission...</span>
                 <span class="type-desc">Priority entry & perks</span>
               </div>
               <span class="type-price">Rs. 1,700</span>
