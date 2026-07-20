@@ -37,18 +37,16 @@
 
             <button
               type="button"
-              class="ticket-type-card sold-out"
-              disabled
-              aria-disabled="true"
+              class="ticket-type-card"
+              :class="{ selected: form.ticketType === 'vip' }"
+              @click="form.ticketType = 'vip'"
             >
               <span class="check-dot" aria-hidden="true" />
               <div class="type-info">
                 <span class="type-name">VIP Admission</span>
                 <span class="type-desc">Priority entry & perks</span>
               </div>
-              <span class="type-price type-price--soldout">
-                <span class="soldout-badge">SOLD OUT</span>
-              </span>
+              <span class="type-price">Rs. 1,700</span>
             </button>
           </div>
         </div>
@@ -119,14 +117,14 @@
               for="slip"
             >
               <span v-if="!form.slip"
-                >Click to upload payment slip (image)</span
+                >Click to upload payment slip (image or PDF)</span
               >
               <span v-else class="file-chosen">✓ {{ form.slip.name }}</span>
             </label>
             <input
               id="slip"
               type="file"
-              accept="image/*"
+              accept="image/*,application/pdf"
               @change="handleFile"
               required
               class="sr-only"
@@ -345,45 +343,6 @@ async function handleSubmit() {
 .ticket-type-card.selected {
   border-color: #f0c84a;
   background: rgba(240, 200, 74, 0.07);
-}
-
-/* ── Sold out state ── */
-.ticket-type-card.sold-out {
-  cursor: not-allowed;
-  opacity: 0.55;
-  filter: grayscale(0.4);
-  border-color: rgba(212, 175, 90, 0.15);
-  background: rgba(255, 255, 255, 0.015);
-}
-
-.ticket-type-card.sold-out:hover {
-  border-color: rgba(212, 175, 90, 0.15);
-}
-
-.ticket-type-card.sold-out .check-dot {
-  border-color: rgba(212, 175, 90, 0.2);
-}
-
-.ticket-type-card.sold-out .type-name,
-.ticket-type-card.sold-out .type-desc {
-  color: #6e6450;
-}
-
-.type-price--soldout {
-  display: inline-flex;
-}
-
-.soldout-badge {
-  font-family: "Cinzel", serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #e0685c;
-  border: 1px solid rgba(224, 104, 92, 0.55);
-  background: rgba(224, 104, 92, 0.08);
-  padding: 5px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
 }
 
 .check-dot {
